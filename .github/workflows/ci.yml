@@ -18,17 +18,22 @@ jobs:
         with:
           node-version: 22
 
+      - name: Instalar cowsay
+        run: npm install -g cowsay
+
       - name: Ejecutar Hola Mundo
         run: node hola.js
 
-      - name: Enviar notificación a ntfy
+      - name: Generar mensaje con cowsay
+        run: |
+          cowsay "¡Hola Mundo desde GitHub Actions!" > mensaje.txt
+          cat mensaje.txt
+
+      - name: Enviar mensaje a ntfy
         run: |
           curl \
-            -H "Title: GitHub Actions" \
+            -H "Title: GitHub Actions 🐄" \
             -H "Priority: default" \
-            -H "Tags: github,white_check_mark" \
-            -d "¡CI ejecutado correctamente! 🚀
-          Repositorio: ${{ github.repository }}
-          Rama: ${{ github.ref_name }}
-          Commit: ${{ github.sha }}" \
+            -H "Tags: github,cow" \
+            -d "$(cat mensaje.txt)" \
             https://ntfy.sh/devops-itla
